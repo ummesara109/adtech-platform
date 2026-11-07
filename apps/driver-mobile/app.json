@@ -1,0 +1,26 @@
+{
+  "expo": {
+    "name": "Auto Ad Partner",
+    "slug": "autoads-driver",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#0B2A6B"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#0B2A6B"
+      },
+      "package": "com.autoads.driver",
+      "permissions": []
+    },
+    "ios": {
+      "bundleIdentifier": "com.autoads.driver",
+      "supportsTablet": true
+    },
+    "scheme": "autoads-driver",
+    "plugins": ["expo-asset", "expo-font", "expo-secure-store", "expo-document-picker"]
+  }
+}

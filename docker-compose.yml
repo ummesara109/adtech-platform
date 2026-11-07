@@ -1,0 +1,93 @@
+# AutoAds local platform stack (advertiser dashboard + supporting infra)
+# Core: postgres + redis
+# Optional extras: docker compose --profile extras up -d
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: autoads-postgres
+    restart: unless-stopped
+    ports:
+      # 5435 avoids clash with a local Windows Postgres often bound to 5432/5433
+      - '5435:5432'
+    environment:
+      POSTGRES_USER: autoads
+      POSTGRES_PASSWORD: autoads
+      POSTGRES_DB: autoads
+    volumes:
+      - autoads_pg:/var/lib/postgresql/data
+      - ./apps/api/prisma/sql/rls_policies.sql:/docker-entrypoint-initdb.d/02-rls.sql:ro
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U autoads -d autoads']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: autoads-redis
+    restart: unless-stopped
+    ports:
+      - '6379:6379'
+    command: ['redis-server', '--appendonly', 'yes']
+    volumes:
+      - autoads_redis:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  emqx:
+    profiles: ['extras']
+    image: emqx/emqx:5.8.3
+    container_name: autoads-emqx
+    restart: unless-stopped
+    ports:
+      - '1883:1883'
+      - '8083:8083'
+      - '18083:18083'
+    environment:
+      EMQX_NAME: autoads
+      EMQX_DASHBOARD__DEFAULT_USERNAME: admin
+      EMQX_DASHBOARD__DEFAULT_PASSWORD: public
+    volumes:
+      - autoads_emqx:/opt/emqx/data
+
+  clickhouse:
+    profiles: ['extras']
+    image: clickhouse/clickhouse-server:24.8-alpine
+    container_name: autoads-clickhouse
+    restart: unless-stopped
+    ports:
+      - '8123:8123'
+      - '9000:9000'
+    volumes:
+      - autoads_ch:/var/lib/clickhouse
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+
+  # Official minio/minio and quay.io/minio are no longer anonymously pullable.
+  # bitnamilegacy/minio is a public drop-in for local S3-compatible storage.
+  minio:
+    profiles: ['extras']
+    image: bitnamilegacy/minio:2024.6.13
+    container_name: autoads-minio
+    restart: unless-stopped
+    command: ['minio', 'server', '/bitnami/minio/data', '--console-address', ':9001']
+    ports:
+      - '9002:9000'
+      - '9001:9001'
+    environment:
+      MINIO_ROOT_USER: autoads
+      MINIO_ROOT_PASSWORD: autoadssecret
+    volumes:
+      - autoads_minio:/bitnami/minio/data
+
+volumes:
+  autoads_pg:
+  autoads_redis:
+  autoads_emqx:
+  autoads_ch:
+  autoads_minio:

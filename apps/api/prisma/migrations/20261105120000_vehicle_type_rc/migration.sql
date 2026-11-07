@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Vehicle" ADD COLUMN IF NOT EXISTS "vehicleType" TEXT NOT NULL DEFAULT 'Auto Rickshaw';
+ALTER TABLE "Vehicle" ADD COLUMN IF NOT EXISTS "rcStorageKey" TEXT NOT NULL DEFAULT '';

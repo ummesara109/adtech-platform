@@ -1,0 +1,17 @@
+# API-local subset (Postgres only). Prefer root docker-compose.yml for full stack.
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: autoads-postgres
+    restart: unless-stopped
+    ports:
+      - '5433:5432'
+    environment:
+      POSTGRES_USER: autoads
+      POSTGRES_PASSWORD: autoads
+      POSTGRES_DB: autoads
+    volumes:
+      - autoads_pg:/var/lib/postgresql/data
+
+volumes:
+  autoads_pg:

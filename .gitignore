@@ -1,0 +1,37 @@
+# Dependencies
+node_modules/
+
+# Builds
+dist/
+dist-ssr/
+build/
+coverage/
+
+# Env / secrets — keep examples
+.env
+.env.*
+!.env.example
+!**/.env.example
+
+# Uploads & local artifacts
+uploads/
+*.log
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Prisma / local DBs
+*.db
+*.db-journal
+
+# Misc
+*.local
+.turbo/
+.cache/

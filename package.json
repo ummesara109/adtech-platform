@@ -1,0 +1,27 @@
+{
+  "name": "autoads-platform",
+  "private": true,
+  "version": "0.2.0",
+  "description": "AutoAds — Bengaluru auto-rickshaw DOOH advertiser platform",
+  "scripts": {
+    "dev:web": "npm --prefix apps/advertiser-web run dev",
+    "dev:driver": "npm --prefix apps/driver-mobile run start",
+    "dev:driver-web": "npm --prefix apps/driver-partner-web run dev",
+    "dev:driver-admin": "npm --prefix apps/driver-admin run dev",
+    "dev:api": "npm --prefix apps/api run start:dev",
+    "setup:driver": "npm --prefix apps/driver-mobile install",
+    "setup:driver-web": "npm --prefix apps/driver-partner-web install",
+    "setup:driver-admin": "npm --prefix apps/driver-admin install",
+    "build:web": "npm --prefix apps/advertiser-web run build",
+    "build:api": "npm --prefix apps/api run build",
+    "lint:api": "npm --prefix apps/api run lint",
+    "stack:up": "docker compose up -d",
+    "stack:down": "docker compose down",
+    "stack:ps": "docker compose ps",
+    "db:up": "docker compose up -d postgres",
+    "db:migrate": "npm --prefix apps/api exec prisma migrate deploy",
+    "db:seed": "npm --prefix apps/api run prisma:seed",
+    "setup:api": "npm --prefix apps/api install && npm --prefix apps/api exec prisma generate",
+    "setup:web": "npm --prefix apps/advertiser-web install"
+  }
+}
